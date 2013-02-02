@@ -34,15 +34,15 @@ Then run the following
 **Ruby**
 
 ```
-Done 1000 times: 4.06176 sec. avg: 0.004061764 (IO=true)
-Done 1000 times: 4.95496 sec. avg: 0.00495496 (IO=false)
+Done 1000 times: 3.451 sec. avg: 0.003451 (IO=true)
+Done 1000 times: 3.825 sec. avg: 0.003825 (IO=false)
 ```
 
 **Node.js**
 
 ```
-Done 1000 times: 3.834 sec. avg: 0.003834 (IO=true)
-Done 1000 times: 3.565 sec. avg: 0.003565 (IO=false)
+Done 1000 times: 3.733 sec. avg: 0.003733 (IO=true)
+Done 1000 times: 3.439 sec. avg: 0.003439 (IO=false)
 ```
 
 **Environment**
@@ -68,8 +68,6 @@ When IO=true, the text is loaded from file everytime in a loop.
 When IO=false, the text is loaded from file at the beggininng so you can evaluate
 it without IO costs.
 
-Well, that's what I thougt. However it turned out that the benchmark without IO is
-slower than the one reading file everytime in Ruby...
-
-
+Well, however the file reader is faster than cache with Ruby on this test.
+It is interesting.
 
