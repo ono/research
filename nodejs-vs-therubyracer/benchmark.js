@@ -38,9 +38,11 @@ function benchmark(repeat, withIO) {
     if (result!=1350) throw new Exception("Value is wrong!");
   }
 
-  console.log("Done %d times: %d sec (IO=%s)", repeat, stopWatch.elapsed(), withIO);
+  var elapsed = stopWatch.elapsed();
+  var avg = elapsed / repeat;
+  console.log("Done %d times: %d sec. avg: %d (IO=%s)", repeat, elapsed, avg, withIO);
 }
 
-benchmark(10000, true);
-benchmark(10000, false);
+benchmark(1000, true);
+benchmark(1000, false);
 

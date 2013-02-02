@@ -39,9 +39,11 @@ def benchmark repeat, with_io
     raise "Value is wrong!" if result!=1350
   end
 
-  puts "Done #{repeat} times: #{sw.elapsed} sec (IO=#{with_io})"
+  elapsed = sw.elapsed
+  avg = elapsed / repeat
+  puts "Done #{repeat} times: #{elapsed} sec. avg: #{avg} (IO=#{with_io})"
 end
 
-benchmark 10_000, true
-benchmark 10_000, false
+benchmark 1_000, true
+benchmark 1_000, false
 
