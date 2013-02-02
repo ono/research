@@ -17,7 +17,8 @@ REPEAT.times do
   context = V8::Context.new
 
   # Loads underscore.js
-  underscore = File.read "./files/underscore-min.js"
+  #underscore = File.read "./files/underscore-min.js"
+  underscore = File.read "./files/underscore.js"
   context.eval(underscore)
 
   # Loads JSON
