@@ -15,23 +15,33 @@ var stopWatch = {
 var repeat = 10000;
 
 var UNDERSCORE = "./files/underscore-min.js";
+var MOMENT = "./files/moment.min.js"
 var JSON = "./files/input.json";
 var JS = "./files/sample.js";
 
 function benchmark(repeat, withIO) {
   var _underscore = fs.readFileSync(UNDERSCORE);
+  var _moment = fs.readFileSync(MOMENT);
   var _json = fs.readFileSync(JSON);
   var _js = fs.readFileSync(JS);
 
   stopWatch.start();
   for (var i=0; i<repeat; i++) {
     var context = vm.createContext();
+
+    // underscore
     var underscore = withIO ? fs.readFileSync(UNDERSCORE) : _underscore;
     vm.runInContext(underscore, context);
 
+    // moment
+    var moment = withIO ? fs.readFileSync(MOMENT) : _moment;
+    vm.runInContext(moment, context);
+
+    // json
     var json = withIO ? fs.readFileSync(JSON) : _json;
     vm.runInContext('json='+json, context);
 
+    // js
     var js = withIO ? fs.readFileSync(JS) : _js;
     result = vm.runInContext(js, context);
 

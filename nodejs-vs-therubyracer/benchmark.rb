@@ -11,11 +11,13 @@ class StopWatch
 end
 
 UNDERSCORE = "./files/underscore-min.js"
+MOMENT = "./files/moment.min.js"
 JSON = "./files/input.json"
 JS = "./files/sample.js"
 
 def benchmark repeat, with_io
   _underscore = File.read UNDERSCORE
+  _moment = File.read MOMENT
   _json = File.read JSON
   _js = File.read JS
 
@@ -26,6 +28,10 @@ def benchmark repeat, with_io
 
     # Loads underscore.js
     underscore = with_io ? File.read(UNDERSCORE) : _underscore
+    context.eval(underscore)
+
+    # Loads moment.js
+    moment = with_io ? File.read(MOMENT) : _moment
     context.eval(underscore)
 
     # Loads JSON
