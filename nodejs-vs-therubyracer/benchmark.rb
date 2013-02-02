@@ -10,27 +10,38 @@ class StopWatch
   end
 end
 
-REPEAT = 10_000
-sw = StopWatch.new
+UNDERSCORE = "./files/underscore-min.js"
+JSON = "./files/input.json"
+JS = "./files/sample.js"
 
-REPEAT.times do
-  context = V8::Context.new
+def benchmark repeat, with_io
+  _underscore = File.read UNDERSCORE
+  _json = File.read JSON
+  _js = File.read JS
 
-  # Loads underscore.js
-  #underscore = File.read "./files/underscore-min.js"
-  underscore = File.read "./files/underscore.js"
-  context.eval(underscore)
+  sw = StopWatch.new
 
-  # Loads JSON
-  json = File.read "./files/input.json"
-  context.eval('var json='+json)
+  repeat.times do
+    context = V8::Context.new
 
-  # Runs javascript
-  js = File.read "./files/sample.js"
-  result = context.eval(js)
+    # Loads underscore.js
+    underscore = with_io ? File.read(UNDERSCORE) : _underscore
+    context.eval(underscore)
 
-  raise "Value is wrong!" if result!=1350
+    # Loads JSON
+    json = with_io ? File.read(JSON) : _json
+    context.eval('var json='+json)
+
+    # Runs javascript
+    js = with_io ? File.read(JS) : _js
+    result = context.eval(js)
+
+    raise "Value is wrong!" if result!=1350
+  end
+
+  puts "Done #{repeat} times: #{sw.elapsed} sec (IO=#{with_io})"
 end
 
-puts "Done #{REPEAT} times: #{sw.elapsed} sec"
+benchmark 10_000, true
+benchmark 10_000, false
 

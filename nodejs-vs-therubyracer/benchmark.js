@@ -14,22 +14,33 @@ var stopWatch = {
 }
 var repeat = 10000;
 
-stopWatch.start();
+var UNDERSCORE = "./files/underscore-min.js";
+var JSON = "./files/input.json";
+var JS = "./files/sample.js";
 
-for (var i=0; i<repeat; i++) {
-  context = vm.createContext();
+function benchmark(repeat, withIO) {
+  var _underscore = fs.readFileSync(UNDERSCORE);
+  var _json = fs.readFileSync(JSON);
+  var _js = fs.readFileSync(JS);
 
-  var underscore = fs.readFileSync("./files/underscore-min.js");
-  vm.runInContext(underscore, context);
+  stopWatch.start();
+  for (var i=0; i<repeat; i++) {
+    var context = vm.createContext();
+    var underscore = withIO ? fs.readFileSync(UNDERSCORE) : _underscore;
+    vm.runInContext(underscore, context);
 
-  var json = fs.readFileSync("./files/input.json");
-  vm.runInContext('var json='+json, context);
+    var json = withIO ? fs.readFileSync(JSON) : _json;
+    vm.runInContext('json='+json, context);
 
-  var js = fs.readFileSync("./files/sample.js");
-  result = vm.runInContext(js, context);
+    var js = withIO ? fs.readFileSync(JS) : _js;
+    result = vm.runInContext(js, context);
 
-  if (result!=1350) throw new Exception("Value is wrong!");
+    if (result!=1350) throw new Exception("Value is wrong!");
+  }
+
+  console.log("Done %d times: %d sec (IO=%s)", repeat, stopWatch.elapsed(), withIO);
 }
 
-console.log("Done %d times: %d sec", repeat, stopWatch.elapsed());
+benchmark(10000, true);
+benchmark(10000, false);
 
