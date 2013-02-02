@@ -33,13 +33,17 @@ Then run the following
 
 **Ruby**
 
+```
 Done 1000 times: 4.06176 sec. avg: 0.004061764 (IO=true)
 Done 1000 times: 4.95496 sec. avg: 0.00495496 (IO=false)
+```
 
 **Node.js**
 
+```
 Done 1000 times: 3.834 sec. avg: 0.003834 (IO=true)
 Done 1000 times: 3.565 sec. avg: 0.003565 (IO=false)
+```
 
 **Environment**
 
@@ -58,7 +62,7 @@ Node.js version: v0.8.4
 * Do map and reduce
 * Repeat N times (1,000)
 
-**What is IO=true/false?**
+**What does IO=true/false mean?**
 
 When IO=true, the text is loaded from file everytime in a loop.
 When IO=false, the text is loaded from file at the beggininng so you can evaluate
