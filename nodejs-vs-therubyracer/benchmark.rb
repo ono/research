@@ -16,10 +16,10 @@ JSON = "./files/input.json"
 JS = "./files/sample.js"
 
 def benchmark repeat, with_io
-  _underscore = File.read UNDERSCORE
-  _moment = File.read MOMENT
-  _json = File.read JSON
-  _js = File.read JS
+  underscore = File.read UNDERSCORE
+  moment = File.read MOMENT
+  json = File.read JSON
+  js = File.read JS
 
   sw = StopWatch.new
 
@@ -27,20 +27,17 @@ def benchmark repeat, with_io
     context = V8::Context.new
 
     # Loads underscore.js
-    underscore = with_io ? File.read(UNDERSCORE) : _underscore
-    context.eval(underscore)
-
-    # Loads moment.js
-    moment = with_io ? File.read(MOMENT) : _moment
-    context.eval(underscore)
-
-    # Loads JSON
-    json = with_io ? File.read(JSON) : _json
-    context.eval('var json='+json)
-
-    # Runs javascript
-    js = with_io ? File.read(JS) : _js
-    result = context.eval(js)
+    if with_io
+      context.eval File.read(UNDERSCORE)
+      context.eval File.read(MOMENT)
+      context.eval 'var json='+File.read(JSON)
+      result = context.eval File.read(JS)
+    else
+      context.eval underscore
+      context.eval moment
+      context.eval 'var json='+json
+      result = context.eval js
+    end
 
     raise "Value is wrong!" if result!=1350
   end
