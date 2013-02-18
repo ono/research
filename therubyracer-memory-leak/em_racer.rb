@@ -27,6 +27,7 @@ class EmRacer
     raise "Wrong result" if a!="bar8"
 
     @context.eval "em.escape"
+    @context.dispose
   end
 
   def escape
