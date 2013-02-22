@@ -14,27 +14,26 @@ VCR.configure do |c|
   c.ignore_localhost = false
 end
 
-# Can't put this inside em loop
-VCR.use_cassette('em_http') do
-  EventMachine.run do
-    url = 'http://localhost:4567/hello'
-    http = EventMachine::HttpRequest.new(url).get
+VCR.insert_cassette('em_http')
 
-    http.errback do |a|
-      p "errback #{a}"
-      p "#{a==http}"
-      EM.stop
-    end
+EventMachine.run do
+  url = 'http://localhost:4567/hello'
+  http = EventMachine::HttpRequest.new(url).get
 
-    http.callback do |a|
-      p "callback #{a}"
-      p "#{a==http}"
+  http.errback do |a|
+    p "errback #{a}"
+    p "#{a==http}"
+    EM.stop
+  end
 
-      p http.response_header.inspect
-      p http.response_header.http_status
-      p http.response
-      EM.stop
-    end
+  http.callback do |a|
+    p "callback #{a}"
+    p "#{a==http}"
+
+    p http.response_header.inspect
+    p http.response_header.http_status
+    p http.response
+    EM.stop
   end
 end
 
