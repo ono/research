@@ -1,37 +1,45 @@
 require 'json'
 require 'v8'
 require 'eventmachine'
+require 'weakref'
 
-def memory
-  rss = `ps -o rss= -p #{Process.pid}`.strip.to_i
+def memory(process_id=Process.pid)
+  rss = `ps -o rss= -p #{process_id}`.strip.to_i
   rss = rss / 1024
-  vsz = `ps -o vsz= -p #{Process.pid}`.strip.to_i
+  vsz = `ps -o vsz= -p #{process_id}`.strip.to_i
   vsz = vsz / 1024
 
-  "#{rss} MB (RSS) #{vsz} MB (VSZ)"
+  "#{Time.now}: #{rss} MB (RSS) #{vsz} MB (VSZ)"
 end
 
 class EmRacer
   include EM::Deferrable
 
   def run
-    text = File.read("sample.json")
-    hash = JSON.parse text
+    @text = File.read("sample.json")
+    @hash = JSON.parse @text
 
-    @context = V8::Context.new
-    @context["hash"] = hash
-    @context["em"] = self
+    escape
 
-    @context.eval File.read("underscore.js")
-    a = @context.eval "hash.foo8"
-    raise "Wrong result" if a!="bar8"
+    # @context = V8::Context.new
+    # @context["hash"] = hash
+    # @context["em"] = self
 
-    @context.eval "em.escape"
-    @context = nil
+    # @context.eval File.read("underscore.js")
+    # a = @context.eval "hash.foo8"
+    # raise "Wrong result" if a!="bar8"
+
+    # @context.eval "em.escape"
+    # @context = nil
   end
 
   def escape
     self.succeed
+  end
+
+  def clear
+    @hash = nil
+    @text = nil
   end
 end
 
@@ -42,6 +50,8 @@ EM.run do
     racer = EmRacer.new
 
     racer.callback do
+      #WeakRef.new(racer)
+      #racer.clear
       puts "memory #{i}: #{memory}"
 
       EM.stop if i==29
