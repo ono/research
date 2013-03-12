@@ -19,18 +19,16 @@ class EmRacer
     @text = File.read("sample.json")
     @hash = JSON.parse @text
 
-    escape
+    @context = V8::Context.new
+    @context["hash"] = @hash
+    @context["em"] = self
 
-    # @context = V8::Context.new
-    # @context["hash"] = hash
-    # @context["em"] = self
+    @context.eval File.read("underscore.js")
+    a = @context.eval "hash.foo8"
+    raise "Wrong result" if a!="bar8"
 
-    # @context.eval File.read("underscore.js")
-    # a = @context.eval "hash.foo8"
-    # raise "Wrong result" if a!="bar8"
-
-    # @context.eval "em.escape"
-    # @context = nil
+    @context.eval "em.escape"
+    @context = nil
   end
 
   def escape
