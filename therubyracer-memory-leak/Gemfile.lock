@@ -14,11 +14,6 @@ GEM
     eventmachine (1.0.3)
     http_parser.rb (0.5.3)
     json (1.7.7)
-    libv8 (3.11.8.13)
-    ref (1.0.2)
-    therubyracer (0.11.3)
-      libv8 (~> 3.11.8.12)
-      ref
 
 PLATFORMS
   ruby
@@ -27,4 +22,3 @@ DEPENDENCIES
   em-http-request
   eventmachine
   json
-  therubyracer
